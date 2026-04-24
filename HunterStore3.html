@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROYR_SHOP | برو</title>
+    <style>
+        :root {
+            --primary: #ff0000;
+            --neon: 0 0 20px rgba(255, 0, 0, 0.5);
+            --glass: rgba(10, 10, 10, 0.85);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.9)), url('https://i.ibb.co/ds9skLWm/IMG-20260424-013040-607.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            color: white; min-height: 100vh; overflow-x: hidden;
+        }
+
+        /* تأثيرات التنقل */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        header { text-align: center; padding: 40px 10px; }
+        .shop-name {
+            font-size: 3.5rem; font-weight: 900; background: linear-gradient(to bottom, #fff, #ff0000);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            cursor: pointer; text-shadow: var(--neon); letter-spacing: 2px;
+        }
+
+        .top-nav { display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
+        .nav-rect {
+            width: 170px; height: 50px; display: flex; align-items: center; justify-content: center;
+            background: var(--glass); border: 2px solid var(--primary); border-radius: 12px;
+            font-weight: bold; cursor: pointer; transition: 0.4s; color: white; box-shadow: var(--neon);
+        }
+        .nav-rect:hover { background: var(--primary); transform: translateY(-5px); box-shadow: 0 0 30px var(--primary); }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
+
+        .card {
+            background: var(--glass); backdrop-filter: blur(10px); border-radius: 20px; padding: 20px;
+            text-align: center; border: 1.5px solid rgba(255, 0, 0, 0.3); transition: 0.4s;
+            position: relative; overflow: hidden;
+        }
+        .card:hover { border-color: var(--primary); box-shadow: 0 0 25px rgba(255, 0, 0, 0.6); transform: scale(1.03); }
+        .card img { width: 100%; height: 140px; object-fit: contain; margin-bottom: 15px; }
+        
+        .price { font-size: 1.6rem; color: #ff3333; font-weight: bold; margin: 10px 0; text-shadow: 0 0 5px black; }
+        .btn-buy {
+            background: linear-gradient(45deg, #ff0000, #8b0000); color: white; border: none;
+            padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s;
+        }
+        .btn-buy:hover { letter-spacing: 1px; box-shadow: var(--neon); }
+
+        /* السلة */
+        .cart-icon { position: fixed; bottom: 30px; left: 30px; width: 65px; height: 65px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 1000; box-shadow: var(--neon); transition: 0.3s; }
+        .cart-icon:active { transform: scale(0.9); }
+        #cartPanel { position: fixed; top: 0; left: 0; width: 320px; height: 100%; background: #080808; z-index: 1500; padding: 25px; display: none; border-right: 3px solid var(--primary); box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
+
+        /* لوحة الأدمن */
+        .admin-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
+        .admin-box { background: #111; padding: 30px; width: 100%; max-width: 550px; border-radius: 20px; border: 2px solid var(--primary); box-shadow: var(--neon); }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; background: #222; border: 1px solid #444; color: white; border-radius: 10px; outline: none; }
+        input:focus { border-color: var(--primary); }
+
+        .support-btn { position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white; padding: 15px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 10px; z-index: 1000; box-shadow: 0 0 20px rgba(37,211,102,0.4); }
+        .hidden { display: none !important; }
+        .view-title { text-align: center; margin: 30px 0; font-size: 2rem; color: #fff; text-shadow: var(--neon); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="shop-name" id="secureBtn">ROYR_SHOP</div>
+        <div class="top-nav">
+            <div class="nav-rect" onclick="showView('ff_acc')">حسابات فري فاير</div>
+            <div class="nav-rect" onclick="showView('pubg_acc')">حسابات بوبجي</div>
+            <div class="nav-rect" onclick="showView('main')" style="background: #222; border-color:#444;">الرئيسية</div>
+        </div>
+    </header>
+
+    <div class="container fade-in" id="mainView">
+        <h2 class="view-title">💎 جواهر فري فاير</h2>
+        <div class="grid" id="ffGrid"></div>
+        <h2 class="view-title" style="margin-top: 60px;">🎫 شدات بوبجي</h2>
+        <div class="grid" id="pubgGrid"></div>
+    </div>
+
+    <div class="container hidden fade-in" id="accView">
+        <h2 id="accTitle" class="view-title"></h2>
+        <div class="grid" id="accGrid"></div>
+    </div>
+
+    <div class="cart-icon" onclick="toggleCart()">🛒<div id="count" style="position:absolute; top:0; right:0; background:white; color:red; border-radius:50%; width:22px; height:22px; font-size:12px; display:flex; align-items:center; justify-content:center; font-weight:bold;">0</div></div>
+    
+    <div id="cartPanel" class="fade-in">
+        <h2 style="color:var(--primary); margin-bottom:20px;">🛒 سلة المشتريات</h2>
+        <div id="list" style="margin-bottom: 20px; max-height: 60vh; overflow-y: auto;"></div>
+        <div id="total" style="font-size: 1.4rem; border-top: 1px solid #333; padding-top: 15px; color:#ff4d4d;"></div>
+        <button class="btn-buy" onclick="checkout()" style="background: #25d366; margin-top: 20px;">تأكيد الطلب واتساب</button>
+        <button class="btn-buy" onclick="toggleCart()" style="margin-top: 10px; background: #333;">إغلاق السلة</button>
+    </div>
+
+    <a href="https://wa.me/966500362942" class="support-btn">الدعم الفني <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="22"></a>
+
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-box fade-in">
+            <div id="loginStep">
+                <h2 style="text-align:center; color:var(--primary);">🔐 منطقة محظورة</h2>
+                <input type="password" id="u_mail" placeholder="الرمز التعريفي">
+                <input type="password" id="u_pass" placeholder="كلمة المرور الاستراتيجية">
+                <button class="btn-buy" onclick="verify()">دخول النظام</button>
+                <button class="btn-buy" onclick="closeAdmin()" style="margin-top:10px; background:#222;">إلغاء</button>
+            </div>
+            <div id="dashStep" class="hidden">
+                <h2 style="color:var(--primary);">🛠 لوحة التحكم</h2>
+                <div id="priceList" style="max-height:250px; overflow-y:auto; background:#1a1a1a; padding:10px; border-radius:10px;"></div>
+                <h3 style="margin:20px 0 10px;">📦 إضافة حساب للبيع</h3>
+                <select id="aType"><option value="ff_acc">فري فاير</option><option value="pubg_acc">بوبجي</option></select>
+                <input type="text" id="aTitle" placeholder="اسم الحساب">
+                <input type="number" id="aPrice" placeholder="السعر بـ SDG">
+                <input type="file" id="aFile" accept="image/*">
+                <button class="btn-buy" onclick="addAcc()">رفع ونشر</button>
+                <button class="btn-buy" onclick="sync()" style="margin-top:20px; background:#0066ff;">💾 حفظ التغييرات نهائياً</button>
+                <button class="btn-buy" onclick="location.reload()" style="margin-top:10px; background:#444;">خروج</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let core = {
+            ff: [
+                {n: "العضوية الأسبوعية", p: 2000}, {n: "العضوية الشهرية", p: 8000},
+                {n: "بوياه باس", p: 5000}, {n: "بوياه باس بلس", p: 10000},
+                {n: "100 Diamond", p: 1000}, {n: "210 + 21", p: 2000},
+                {n: "530 + 53", p: 5000}, {n: "1080 + 108", p: 10000},
+                {n: "2200 + 220", p: 20000}, {n: "5600 + 560", p: 50000},
+                {n: "10800 + 1080", p: 100000}
+            ],
+            pb: [
+                {n: "60 UC", p: 1000}, {n: "300 + 55 UC", p: 5000},
+                {n: "600 + 120 UC", p: 10000}, {n: "1500 + 450 UC", p: 25000},
+                {n: "3000 + 1000 UC", p: 50000}, {n: "6000 + 2400 UC", p: 100000},
+                {n: "Royale Pass عادي", p: 6000}, {n: "Royale Pass Elite", p: 12000}
+            ],
+            accs: []
+        };
+
+        let cart = [];
+
+        function init() {
+            const local = localStorage.getItem('royr_v4_pro');
+            if(local) core = JSON.parse(local);
+            render();
+        }
+
+        function sync() {
+            localStorage.setItem('royr_v4_pro', JSON.stringify(core));
+            render();
+            alert("تم التحديث بنجاح! جميع الزوار سيرون الأسعار الجديدة. ✅");
+        }
+
+        function render() {
+            const imgFF = 'https://i.ibb.co/zVYT29Sg/IMG-20260424-013040-607.jpg';
+            const imgPB = 'https://i.ibb.co/HfSvm4d9/IMG-20260424-013042-954.jpg';
+
+            document.getElementById('ffGrid').innerHTML = core.ff.map(i => `
+                <div class="card"><img src="${imgFF}"><h3>${i.n}</h3><div class="price">${i.p} SDG</div><button class="btn-buy" onclick="add('${i.n}', ${i.p})">إضافة للسلة</button></div>
+            `).join('');
+
+            document.getElementById('pubgGrid').innerHTML = core.pb.map(i => `
+                <div class="card"><img src="${imgPB}"><h3>${i.n}</h3><div class="price">${i.p} SDG</div><button class="btn-buy" onclick="add('${i.n}', ${i.p})">إضافة للسلة</button></div>
+            `).join('');
+        }
+
+        function add(n, p) { cart.push({n, p}); updateCart(); }
+        
+        function updateCart() {
+            document.getElementById('count').innerText = cart.length;
+            let total = 0;
+            document.getElementById('list').innerHTML = cart.map((i, x) => {
+                total += i.p;
+                return `<div style="display:flex;justify-content:space-between;margin-bottom:12px;padding:5px;background:rgba(255,255,255,0.05);border-radius:8px;"><span>${i.n}</span><span>${i.p} SDG <button onclick="cart.splice(${x},1);updateCart()" style="color:red;border:none;background:none;cursor:pointer;font-size:1.1rem;">✖</button></span></div>`;
+            }).join('');
+            document.getElementById('total').innerText = "المجموع الكلي: " + total + " SDG";
+        }
+
+        function toggleCart() { const p = document.getElementById('cartPanel'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; }
+        
+        function checkout() {
+            if(!cart.length) return;
+            let m = "🚀 طلب جديد - ROYR_SHOP\n--------------------------\n";
+            let t = 0; cart.forEach(i => { m += `• ${i.n} (${i.p} SDG)\n`; t += i.p; });
+            m += `--------------------------\n💰 الإجمالي: ${t} SDG`;
+            window.open(`https://wa.me/966500362942?text=${encodeURIComponent(m)}`);
+        }
+
+        function showView(v) {
+            const main = document.getElementById('mainView');
+            const acc = document.getElementById('accView');
+            main.classList.add('hidden'); acc.classList.add('hidden');
+            
+            if(v === 'main') { main.classList.remove('hidden'); }
+            else {
+                acc.classList.remove('hidden');
+                document.getElementById('accTitle').innerText = v === 'ff_acc' ? "قسم حسابات فري فاير" : "قسم حسابات بوبجي";
+                const filtered = core.accs.filter(a => a.t === v);
+                document.getElementById('accGrid').innerHTML = filtered.length ? filtered.map(a => `
+                    <div class="card"><img src="${a.i}"><h3>${a.n}</h3><div class="price">${a.p} SDG</div><button class="btn-buy" onclick="add('${a.n}', ${a.p})">شراء الآن</button></div>
+                `).join('') : "<h3 style='grid-column:1/-1;text-align:center;opacity:0.5'>لا يوجد حسابات معروضة حالياً!!</h3>";
+            }
+        }
+
+        document.getElementById('secureBtn').ondblclick = () => document.getElementById('adminModal').style.display='flex';
+        function closeAdmin() { document.getElementById('adminModal').style.display='none'; }
+
+        function verify() {
+            const u = document.getElementById('u_mail').value;
+            const p = document.getElementById('u_pass').value;
+            if(u === "admin@royr.com" && p === "msksiei311581tsjeii") {
+                document.getElementById('loginStep').classList.add('hidden');
+                document.getElementById('dashStep').classList.remove('hidden');
+                let h = '';
+                core.ff.forEach((i, x) => h += `<div>${i.n}: <input type="number" value="${i.p}" onchange="core.ff[${x}].p=parseInt(this.value)"></div>`);
+                core.pb.forEach((i, x) => h += `<div>${i.n}: <input type="number" value="${i.p}" onchange="core.pb[${x}].p=parseInt(this.value)"></div>`);
+                document.getElementById('priceList').innerHTML = h;
+            } else alert("وصول غير مصرح به!");
+        }
+
+        function addAcc() {
+            const file = document.getElementById('aFile').files[0];
+            const title = document.getElementById('aTitle').value;
+            const price = document.getElementById('aPrice').value;
+            const type = document.getElementById('aType').value;
+            if(!file || !title || !price) return alert("يرجى إكمال البيانات");
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                core.accs.push({t: type, n: title, p: parseInt(price), i: e.target.result});
+                alert("تم التجهيز، لا تنسَ الضغط على 'حفظ التغييرات' للنشر.");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        init();
+    </script>
+</body>
+</html>
